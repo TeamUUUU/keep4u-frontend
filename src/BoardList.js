@@ -7,23 +7,17 @@ class BoardList extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			selectedIndex: 0,
+
 		};
 	}
 
-	handleListItemClick = (event, index) => {
-		this.setState({ selectedIndex: index });
-	};
-
 	render() {
-		const { boards,
-			changeSelectedIndex } = this.props;
-			changeSelectedIndex(this.state.selectedIndex)
+		const { boards , handleToUpdate} = this.props;
 		const toList = (board, idx) => (
 			<ListItem
 				button
 				selected={this.state.selectedIndex === idx}
-				onClick={event => this.handleListItemClick(event, idx)}
+				onClick={() => handleToUpdate(idx)}
 			>
 				<ListItemText
 					primary={board.title}
