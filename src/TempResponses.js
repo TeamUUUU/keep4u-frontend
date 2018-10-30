@@ -11,6 +11,7 @@ export function getBoardsTemp() {
 	return data;
 }
 
+const randomContent = " Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris tempor blandit lacinia. In hac habitasse platea dictumst. Aliquam erat volutpat. Nam pretium ut enim ut ultrices. Praesent venenatis dictum turpis sed suscipit. Praesent eleifend sapien id nisi rhoncus, a congue odio posuere.";
 
 export function getNotesByBoardID(boardID) {
 	let data = [];
@@ -19,7 +20,7 @@ export function getNotesByBoardID(boardID) {
 			id: i.toString(),
 			board_id: boardID.toString(),
 			title: "Note title " + i,
-			content: "Content " + i,
+			content: "Content " + i + randomContent,
 			created_at: +new Date(),
 			attachments: [
 				{

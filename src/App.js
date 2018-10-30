@@ -3,6 +3,7 @@ import './App.css';
 import { getBoardsTemp, getNotesByBoardID } from './TempResponses';
 import BoardList from './BoardList';
 import NoteList from './NoteList';
+import Grid from '@material-ui/core/Grid';
 
 class App extends Component {
 	constructor(props) {
@@ -32,24 +33,35 @@ class App extends Component {
 	render() {
 		console.log(this.state.boardList)
 		return (
-			<div id="wrapper" class="animate">
-				<nav class="navbar sticky-top navbar-dark bg-dark">
-					<h2 class="navbar-brand text-success">Keep For You</h2>
-					<form class="form-inline">
-						<input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" />
-						<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-					</form>
-				</nav>
-
-				<div class="row">
-					<div class="col-3">
+			<div>
+				<Grid container spacing={24}>
+					<Grid item xs={2}>
 						<BoardList boards={this.state.boardList} />
-					</div>
-					<div class="col-9">
-						{<NoteList notes={this.state.noteList} />}
-					</div>
-				</div>
+					</Grid>
+					<Grid item xs={10}>
+						<NoteList notes={this.state.noteList} />
+					</Grid>
+				</Grid>
 			</div>
+
+			// <div id="wrapper" class="animate">
+			// 	<nav class="navbar sticky-top navbar-dark bg-dark">
+			// 		<h2 class="navbar-brand text-success">Keep For You</h2>
+			// 		<form class="form-inline">
+			// 			<input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" />
+			// 			<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+			// 		</form>
+			// 	</nav>
+
+			// 	<div class="row">
+			// 		<div class="col-3">
+			// 			<BoardList boards={this.state.boardList} />
+			// 		</div>
+			// 		<div class="col-9">
+			// 			{<NoteList notes={this.state.noteList} />}
+			// 		</div>
+			// 	</div>
+			// </div>
 		);
 	}
 }

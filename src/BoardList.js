@@ -1,27 +1,39 @@
 import React, { Component } from 'react';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
 
 class BoardList extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-
+			selectedIndex: 0,
 		};
 	}
-
+	
+	handleListItemClick = (event, index) => {
+		this.setState({ selectedIndex: index });
+	  };
 
 	render() {
 		const { boards } = this.props;
 		const toList = (board, idx) => (
-			<button type="button" key={idx} class="btn btn-outline-info list-group-item bg-white text-primary">
-				{`title: ${board.title}`}
-				<p>
-					{`description: ${board.description}`}
-				</p>
-			</button>)
+			<ListItem
+				button
+				selected={this.state.selectedIndex === idx}
+				onClick={event => this.handleListItemClick(event, idx)}
+			>
+				<ListItemText
+					primary={board.title}
+					secondary={board.description}
+				>
+				</ListItemText>
+			</ListItem>
+		)
 		return (
-			<ul class="list-group mt-3 ml-4">
+			<List component="nav">
 				{boards.map(toList)}
-			</ul>
+			</List>
 		);
 	}
 }
