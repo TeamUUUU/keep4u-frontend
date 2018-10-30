@@ -11,13 +11,19 @@ class BoardList extends Component {
 		};
 	}
 
+
+	onClickCallback(event, idx) {
+		this.setState({selectedIndex: idx});
+		this.props.handleToUpdate(idx);
+	}
+
 	render() {
-		const { boards , handleToUpdate} = this.props;
+		const { boards, handleToUpdate } = this.props;
 		const toList = (board, idx) => (
 			<ListItem
 				button
 				selected={this.state.selectedIndex === idx}
-				onClick={() => handleToUpdate(idx)}
+				onClick={event => this.onClickCallback(event, idx)}
 			>
 				<ListItemText
 					primary={board.title}
