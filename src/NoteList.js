@@ -15,6 +15,7 @@ class NoteList extends Component {
 
 	render() {
 		const { notes } = this.props;
+		console.log(notes);
 		const toList = (note, idx) => (
 			<Grid item xs={3}>
 				<Card style={{minHeight: '20vw'}}>

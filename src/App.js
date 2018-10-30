@@ -29,6 +29,8 @@ class App extends Component {
 
 	handleToUpdate = (idx) => {
 		this.setState({ selectedIndex: idx });
+		const noteList = getNotesByBoardID(this.state.boardList[this.state.selectedIndex].id);
+		this.setState({ noteList: noteList });
 	}
 
 	componentDidMount() {
@@ -44,10 +46,10 @@ class App extends Component {
 				<NavBar />
 				<Grid container spacing={24}>
 					<Grid item xs={2}>
-						<BoardList boards={this.state.boardList} />
+						<BoardList boards={this.state.boardList} handleToUpdate={this.handleToUpdate.bind(this)} />
 					</Grid>
 					<Grid item xs={10}>
-						<NoteList notes={this.state.noteList} handleToUpdate={this.handleToUpdate} />
+						<NoteList notes={this.state.noteList} />
 					</Grid>
 				</Grid>
 			</div>

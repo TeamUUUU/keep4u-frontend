@@ -7,7 +7,7 @@ class BoardList extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-
+			selectedIndex: 0
 		};
 	}
 
