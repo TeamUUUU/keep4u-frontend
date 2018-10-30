@@ -16,7 +16,9 @@ class BoardList extends Component {
 	};
 
 	render() {
-		const { boards } = this.props;
+		const { boards,
+			changeSelectedIndex } = this.props;
+			changeSelectedIndex(this.state.selectedIndex)
 		const toList = (board, idx) => (
 			<ListItem
 				button

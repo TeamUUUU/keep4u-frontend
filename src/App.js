@@ -34,12 +34,13 @@ class App extends Component {
 	}
 
 	render() {
+		const changeSelectedIndex = (selectedIndex) => this.setState({...this.state, selectedIndex})
 		return (
 			<div>
 				<NavBar />
 				<Grid container spacing={24}>
 					<Grid item xs={2}>
-						<BoardList boards={this.state.boardList}/>
+						<BoardList boards={this.state.boardList} changeSelectedIndex={changeSelectedIndex}/>
 					</Grid>
 					<Grid item xs={10}>
 						<NoteList notes={this.state.noteList}/>
