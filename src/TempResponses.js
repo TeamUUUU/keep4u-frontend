@@ -15,7 +15,8 @@ const randomContent = " Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 
 export function getNotesByBoardID(boardID) {
 	let data = [];
-	for (let i = 0; i < 10; i++) {
+	let randomNumber = boardID + 10; 
+	for (let i = 0; i < randomNumber; i++) {
 		data.push({
 			id: i.toString(),
 			board_id: boardID.toString(),

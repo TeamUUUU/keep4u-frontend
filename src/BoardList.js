@@ -10,10 +10,10 @@ class BoardList extends Component {
 			selectedIndex: 0,
 		};
 	}
-	
+
 	handleListItemClick = (event, index) => {
 		this.setState({ selectedIndex: index });
-	  };
+	};
 
 	render() {
 		const { boards } = this.props;

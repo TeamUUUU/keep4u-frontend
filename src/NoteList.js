@@ -28,15 +28,6 @@ class NoteList extends Component {
 						</Typography>
 					</CardContent>
 				</Card>
-				{/*// <div class="col-sm-3 m-3 rounded">
-			// 	<div class="card">
-			// 		<div class="card-body" key={idx}>
-			// 			<h5 class="card-title">{note.title}</h5>
-			// 			<p class="card-text">{note.content}</p>
-			// 			<a href="#" class="btn btn-primary">More</a>
-			// 		</div>
-			// 	</div>
-		// </div>*/}
 			</Grid>
 		)
 		return (
