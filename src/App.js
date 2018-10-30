@@ -36,8 +36,8 @@ class App extends Component {
 	componentDidMount() {
 		// temporary methods until server is down
 		const boardList = getBoardsTemp();
-		const noteList = getNotesByBoardID(boardList[this.state.selectedIndex].id);
-		this.setState({ ...this.state, boardList, noteList });
+		// const noteList = getNotesByBoardID(boardList[this.state.selectedIndex].id);
+		this.setState({ ...this.state, boardList, /*noteList*/ });
 	}
 
 	render() {
