@@ -42,17 +42,17 @@ class App extends Component {
 
 	render() {
 		return (
-			<div>
-				<NavBar />
-				<Grid container spacing={24}>
-					<Grid item xs={2}>
-						<BoardList boards={this.state.boardList} handleToUpdate={this.handleToUpdate.bind(this)} />
-					</Grid>
-					<Grid item xs={10}>
-						<NoteList notes={this.state.noteList} />
-					</Grid>
+			<Grid container spacing={24} style={{ width: '100%'}}>
+				<Grid item md={12} xs={12}>
+					<NavBar />
 				</Grid>
-			</div>
+				<Grid item md={2} xs={6}>
+					<BoardList boards={this.state.boardList} handleToUpdate={this.handleToUpdate.bind(this)} />
+				</Grid>
+				<Grid item md={10} xs={6}>
+					<NoteList notes={this.state.noteList} />
+				</Grid>
+			</Grid>
 		);
 	}
 }

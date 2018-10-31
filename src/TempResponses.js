@@ -4,8 +4,8 @@ export function getBoardsTemp() {
 	for (let i = 0; i < 10; i++) {
 		data.push({
 			id: i.toString(),
-			title: "title" + i,
-			description: "description" + i
+			title: "Board title " + i,
+			description: "Two line, very long description " + i
 		})
 	}
 	return data;
