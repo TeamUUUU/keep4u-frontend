@@ -15,16 +15,25 @@ class NoteList extends Component {
 		};
 	}
 
+	onClickCallback(event, idx) {
+		this.props.handleToSelectNote(idx);
+	}
+
 	render() {
 		const { notes } = this.props;
 		const toList = (note, idx) => (
 			<Grid
 				key={idx}
 				item
-				md={3} xs={12}>
-				<Card style={{
+				md={3} xs={12}
+			>
+				<Card 
+				elevation={5}
+				style={{
 					minHeight: '20vh'
-				}}>
+				}}
+					onClick={event => this.onClickCallback(event, idx)}
+				>
 					<CardContent>
 						<Typography variant="h5" component="h2" >
 							{note.title}

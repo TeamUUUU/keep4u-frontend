@@ -5,6 +5,7 @@ import BoardList from './BoardList';
 import NoteList from './NoteList';
 import Grid from '@material-ui/core/Grid';
 import NavBar from './NavBar';
+import Note from './Note';
 
 class App extends Component {
 	constructor(props) {
@@ -23,34 +24,42 @@ class App extends Component {
 				created_at: 0,
 				attachments: []
 			}],
-			selectedIndex: 0
+			selectedBoardIndex: 0,
+			selectedNoteIndex: 0,
+			isNoteSelected: false
 		};
 	}
 
-	handleToUpdate = (idx) => {
-		this.setState({ selectedIndex: idx }); // setState is asynchronous
+	handleToSelectBoard = (idx) => {
+		this.setState({ selectedBoardIndex: idx }); // setState is asynchronous
 		const noteList = getNotesByBoardID(idx);
-		this.setState({ noteList: noteList });
+		this.setState({ noteList: noteList, isNoteSelected: false });
+	}
+
+	handleToSelectNote = (idx) => {
+		this.setState({ selectedNoteIndex: idx, isNoteSelected: true});
+		window.scrollTo(0, 0); 
 	}
 
 	componentDidMount() {
 		// temporary methods until server is down
 		const boardList = getBoardsTemp();
-		const noteList = getNotesByBoardID(this.state.selectedIndex);
+		const noteList = getNotesByBoardID(this.state.selectedBoardIndex); // TODO: set selectedIdx based on data recieved from server
 		this.setState({ ...this.state, boardList, noteList });
 	}
 
 	render() {
 		return (
-			<Grid container spacing={24} style={{ width: '100%'}}>
+			<Grid container spacing={24} style={{ width: '100%' }}>
 				<Grid item md={12} xs={12}>
 					<NavBar />
 				</Grid>
 				<Grid item md={2} xs={6}>
-					<BoardList boards={this.state.boardList} handleToUpdate={this.handleToUpdate.bind(this)} />
+					<BoardList boards={this.state.boardList} handleToSelectBoard={this.handleToSelectBoard.bind(this)} />
 				</Grid>
 				<Grid item md={10} xs={6}>
-					<NoteList notes={this.state.noteList} />
+					{!this.state.isNoteSelected && <NoteList notes={this.state.noteList} handleToSelectNote={this.handleToSelectNote.bind(this)}/>}
+					{this.state.isNoteSelected && <Note  note={this.state.noteList[this.state.selectedNoteIndex]}/>}
 				</Grid>
 			</Grid>
 		);

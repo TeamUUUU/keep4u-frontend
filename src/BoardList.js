@@ -7,14 +7,13 @@ class BoardList extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			selectedIndex: 0
+			selectedBoardIndex: 0
 		};
 	}
 
-
 	onClickCallback(event, idx) {
-		this.setState({ selectedIndex: idx });
-		this.props.handleToUpdate(idx);
+		this.setState({ selectedBoardIndex: idx });
+		this.props.handleToSelectBoard(idx);
 	}
 
 	render() {
@@ -23,12 +22,12 @@ class BoardList extends Component {
 			<ListItem
 				key={idx}
 				button
-				selected={this.state.selectedIndex === idx}
+				selected={this.state.selectedBoardIndex === idx}
 				onClick={event => this.onClickCallback(event, idx)}
 			>
 				<ListItemText
 					primary={board.title}
-					secondary={board.description}	
+					secondary={board.description}
 				>
 				</ListItemText>
 			</ListItem>
