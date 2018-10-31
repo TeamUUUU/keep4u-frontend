@@ -3,6 +3,8 @@ import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
+import ReactMarkdown from 'react-markdown'
+
 
 
 class NoteList extends Component {
@@ -17,19 +19,19 @@ class NoteList extends Component {
 		const { notes } = this.props;
 		const toList = (note, idx) => (
 			<Grid
-			key={idx}
-			item 
-			md={3} xs={12}>
-				<Card style={{ 
+				key={idx}
+				item
+				md={3} xs={12}>
+				<Card style={{
 					minHeight: '20vh'
-					}}>
+				}}>
 					<CardContent>
 						<Typography variant="h5" component="h2" >
 							{note.title}
 						</Typography>
-						<Typography component="p">
+						<ReactMarkdown>
 							{note.content}
-						</Typography>
+						</ReactMarkdown>
 					</CardContent>
 				</Card>
 			</Grid>
