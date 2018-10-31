@@ -28,16 +28,16 @@ class App extends Component {
 	}
 
 	handleToUpdate = (idx) => {
-		this.setState({ selectedIndex: idx });
-		const noteList = getNotesByBoardID(this.state.boardList[this.state.selectedIndex].id);
+		this.setState({ selectedIndex: idx }); // setState is asynchronous
+		const noteList = getNotesByBoardID(idx);
 		this.setState({ noteList: noteList });
 	}
 
 	componentDidMount() {
 		// temporary methods until server is down
 		const boardList = getBoardsTemp();
-		// const noteList = getNotesByBoardID(boardList[this.state.selectedIndex].id);
-		this.setState({ ...this.state, boardList, /*noteList*/ });
+		const noteList = getNotesByBoardID(this.state.selectedIndex);
+		this.setState({ ...this.state, boardList, noteList });
 	}
 
 	render() {

@@ -15,14 +15,14 @@ const randomContent = " Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 
 export function getNotesByBoardID(boardID) {
 	let data = [];
-	let number = 1 + boardID; 
+	let number = 1 + boardID;
 	for (let i = 0; i < number; i++) {
 		data.push({
 			id: i.toString(),
 			board_id: boardID.toString(),
 			title: "Note title " + i,
 			content: "Content " + i + randomContent,
-			created_at: +new Date(),
+			created_at: + new Date(),
 			attachments: [
 				{
 					kind: "file",
