@@ -6,7 +6,9 @@ import {
 	getBoards,
 	getNoteByID,
 	getNotesByBoardId,
-	getSearchNotes
+	getSearchNotes,
+	postNewNote,
+	putNote
 } from './API';
 import BoardList from './BoardList';
 import NoteList from './NoteList';
@@ -33,7 +35,8 @@ class App extends Component {
 			}],
 			selectedBoardId: "",
 			selectedNoteId: "",
-			isNoteSelected: false
+			isNoteSelected: false,
+			isAddingNote: false
 		};
 	}
 
@@ -41,7 +44,7 @@ class App extends Component {
 		this.setState({ selectedBoardId: id }); // setState is asynchronous
 		try {
 			const noteList = await getNotesByBoardId(id);
-			this.setState({ noteList: noteList, isNoteSelected: false });
+			this.setState({ noteList: noteList, isNoteSelected: false, isAddingNote: false });
 		} catch (e) {
 			alert(e);
 		}
@@ -50,6 +53,32 @@ class App extends Component {
 	handleToSelectNote = (idx) => {
 		this.setState({ selectedNoteId: idx, isNoteSelected: true });
 		window.scrollTo(0, 0);
+	}
+
+	handleToAddNote = () => {
+		this.setState({ isAddingNote: true });
+		window.scrollTo(0, 0);
+	}
+
+	handleSaveNote = async (note) => {
+		if (this.state.isAddingNote) {
+			try {
+				const newNote = await postNewNote(note, this.state.selectedBoardId);
+				let noteList = this.state.noteList;
+				noteList.push(newNote);
+				this.setState({ noteList: noteList, isNoteSelected: false, isAddingNote: false });
+			} catch (e) {
+				alert(e);
+			}
+		}
+		else if(!this.state.isAddingNote) {
+			try {
+				const noteList = await putNote(note, this.state.selectedBoardId);
+				this.setState({ noteList: noteList, isNoteSelected: false, isAddingNote: false });
+			} catch (e) {
+				alert(e);
+			}
+		}
 	}
 
 	async componentDidMount() {
@@ -73,11 +102,31 @@ class App extends Component {
 					<NavBar />
 				</Grid>
 				<Grid item md={2} xs={6}>
-					<BoardList boards={this.state.boardList} handleToSelectBoard={this.handleToSelectBoard.bind(this)} />
+					<BoardList
+						boards={this.state.boardList}
+						handleToSelectBoard={this.handleToSelectBoard.bind(this)}
+					/>
 				</Grid>
 				<Grid item md={10} xs={6}>
-					{!this.state.isNoteSelected && <NoteList notes={this.state.noteList} handleToSelectNote={this.handleToSelectNote.bind(this)} />}
-					{this.state.isNoteSelected && <Note note={this.state.noteList[this.state.selectedNoteId]} />}
+					{!this.state.isNoteSelected && !this.state.isAddingNote &&
+						<NoteList
+							notes={this.state.noteList}
+							handleToSelectNote={this.handleToSelectNote.bind(this)}
+							handleToAddNote={this.handleToAddNote.bind(this)}
+						/>
+					}
+					{this.state.isNoteSelected && !this.state.isAddingNote &&
+						<Note
+							note={this.state.noteList[this.state.selectedNoteId]}
+							handleSaveNote={this.handleSaveNote.bind(this)}
+						/>
+					}
+					{!this.state.isNoteSelected && this.state.isAddingNote &&
+						<Note
+							note={{}}
+							handleSaveNote={this.handleSaveNote.bind(this)}
+						/>
+					}
 				</Grid>
 			</Grid>
 		);

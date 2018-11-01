@@ -11,9 +11,39 @@ class Note extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-
+			note: {
+				id: "",
+				board_id: "",
+				title: "",
+				content: "",
+				created_at: 0,
+				attachments: []
+			}
 		};
 	}
+
+	componentDidMount() {
+		this.setState({ note: this.props.note });
+	}
+
+	onChangeTitleCallBack(value) {
+		console.log(value)
+		let note = this.props.note;
+		note.title = value;
+		this.setState({ note: note });
+	}
+
+	onChangeContentCallBack(value) {
+		console.log(value)
+		let note = this.props.note;
+		note.content = value;
+		this.setState({ note: note });
+	}
+
+	onClickSaveButtonCallback() {
+		this.props.handleSaveNote(this.state.note);
+	}
+
 	render() {
 		const note = this.props.note;
 
@@ -30,17 +60,24 @@ class Note extends Component {
 				>
 					<CardContent>
 						<TextField
-							defaultValue={note.title}>
+							defaultValue={note.title}
+							onChange={(event) => this.onChangeTitleCallBack(event.target.value)}
+						>
 						</TextField>
 						<TextField
 							multiline
 							defaultValue={note.content}
 							rowsMax={30}
-							fullWidth>
+							fullWidth
+							onChange={(event) => this.onChangeContentCallBack(event.target.value)}
+						>
 						</TextField >
 					</CardContent>
 					<CardActions>	{/*TODO: add save action handle*/}
-						<IconButton aria-label="Save">
+						<IconButton
+							aria-label="Save"
+							onClick={() => this.onClickSaveButtonCallback()}
+						>
 							<SaveIcon />
 						</IconButton>
 					</CardActions>
