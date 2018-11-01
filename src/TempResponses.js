@@ -20,7 +20,7 @@ _This is italic text_\n
 ~~Strikethrough~~\n
 `;
 
-export function getNotesByBoardID(boardID) {
+export function getNotesByBoardIdTemp(boardID) {
 	let data = [];
 	let number = 1 + boardID;
 	for (let i = 0; i < number; i++) {

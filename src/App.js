@@ -1,11 +1,19 @@
 import React, { Component } from 'react';
 import './App.css';
-import { getBoardsTemp, getNotesByBoardID } from './TempResponses';
+import {
+	getAttachmentById,
+	getBoardById,
+	getBoards,
+	getNoteByID,
+	getNotesByBoardId,
+	getSearchNotes
+} from './API';
 import BoardList from './BoardList';
 import NoteList from './NoteList';
 import Grid from '@material-ui/core/Grid';
 import NavBar from './NavBar';
 import Note from './Note';
+import { getNotesByBoardIdTemp } from './TempResponses';
 
 class App extends Component {
 	constructor(props) {
@@ -24,28 +32,39 @@ class App extends Component {
 				created_at: 0,
 				attachments: []
 			}],
-			selectedBoardIndex: 0,
-			selectedNoteIndex: 0,
+			selectedBoardIndex: "",
+			selectedNoteIndex: "",
 			isNoteSelected: false
 		};
 	}
 
-	handleToSelectBoard = (idx) => {
+	handleToSelectBoard = async (idx) => {
 		this.setState({ selectedBoardIndex: idx }); // setState is asynchronous
-		const noteList = getNotesByBoardID(idx);
-		this.setState({ noteList: noteList, isNoteSelected: false });
+		try {
+			const noteList = await getNotesByBoardId(idx);
+			this.setState({ noteList: noteList, isNoteSelected: false });
+		} catch (e) {
+			alert(e);
+		}
 	}
 
 	handleToSelectNote = (idx) => {
-		this.setState({ selectedNoteIndex: idx, isNoteSelected: true});
-		window.scrollTo(0, 0); 
+		this.setState({ selectedNoteIndex: idx, isNoteSelected: true });
+		window.scrollTo(0, 0);
 	}
 
-	componentDidMount() {
-		// temporary methods until server is down
-		const boardList = getBoardsTemp();
-		const noteList = getNotesByBoardID(this.state.selectedBoardIndex); // TODO: set selectedIdx based on data recieved from server
-		this.setState({ ...this.state, boardList, noteList });
+	async componentDidMount() {
+		try {
+			let temp_user_id = 'some-owner-id'; //TODO: Change after adding authoriaztion 
+			const boardList = await getBoards(temp_user_id);
+			this.setState({
+				selectedBoardIndex: boardList[0].id
+			});
+			const noteList = await getNotesByBoardId(this.state.selectedBoardIndex);
+			this.setState({ ...this.state, boardList, noteList });
+		} catch (e) {
+			alert(e);
+		}
 	}
 
 	render() {
@@ -58,8 +77,8 @@ class App extends Component {
 					<BoardList boards={this.state.boardList} handleToSelectBoard={this.handleToSelectBoard.bind(this)} />
 				</Grid>
 				<Grid item md={10} xs={6}>
-					{!this.state.isNoteSelected && <NoteList notes={this.state.noteList} handleToSelectNote={this.handleToSelectNote.bind(this)}/>}
-					{this.state.isNoteSelected && <Note  note={this.state.noteList[this.state.selectedNoteIndex]}/>}
+					{!this.state.isNoteSelected && <NoteList notes={this.state.noteList} handleToSelectNote={this.handleToSelectNote.bind(this)} />}
+					{this.state.isNoteSelected && <Note note={this.state.noteList[this.state.selectedNoteIndex]} />}
 				</Grid>
 			</Grid>
 		);
