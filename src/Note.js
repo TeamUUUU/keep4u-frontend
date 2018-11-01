@@ -6,6 +6,7 @@ import CardActions from '@material-ui/core/CardActions';
 import TextField from '@material-ui/core/TextField';
 import IconButton from '@material-ui/core/IconButton';
 import SaveIcon from '@material-ui/icons/Save';
+import Grow from '@material-ui/core/Grow';
 
 class Note extends Component {
 	constructor(props) {
@@ -22,10 +23,11 @@ class Note extends Component {
 				item
 				md={12} xs={12}
 			>
+			<Grow in timeout={5000}>
 				<Card
 					elevation={5}
 					style={{
-						minHeight: '75vh'
+						minHeight: '60vh'
 					}}
 				>
 					<CardContent>
@@ -40,11 +42,12 @@ class Note extends Component {
 						</TextField >
 					</CardContent>
 					<CardActions>	{/*TODO: add save action handle*/}
-						<IconButton aria-label="Save">
-							<SaveIcon />
+						<IconButton aria-label="Save" >
+							<SaveIcon/>
 						</IconButton>
 					</CardActions>
 				</Card>
+				</Grow>
 			</Grid>
 		);
 	}

@@ -26,7 +26,7 @@ class App extends Component {
 			}],
 			selectedBoardIndex: 0,
 			selectedNoteIndex: 0,
-			isNoteSelected: false
+			isNoteSelected: false,
 		};
 	}
 
@@ -38,7 +38,6 @@ class App extends Component {
 
 	handleToSelectNote = (idx) => {
 		this.setState({ selectedNoteIndex: idx, isNoteSelected: true});
-		window.scrollTo(0, 0); 
 	}
 
 	componentDidMount() {

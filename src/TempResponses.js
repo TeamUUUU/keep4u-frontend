@@ -28,7 +28,7 @@ export function getNotesByBoardID(boardID) {
 			id: i.toString(),
 			board_id: boardID.toString(),
 			title: "Note title " + i,
-			content: "Content " + i + randomContent,
+			content: "Content " + boardID + randomContent,
 			created_at: + new Date(),
 			attachments: [
 				{
