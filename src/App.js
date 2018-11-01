@@ -13,7 +13,6 @@ import NoteList from './NoteList';
 import Grid from '@material-ui/core/Grid';
 import NavBar from './NavBar';
 import Note from './Note';
-import { getNotesByBoardIdTemp } from './TempResponses';
 
 class App extends Component {
 	constructor(props) {
@@ -32,16 +31,16 @@ class App extends Component {
 				created_at: 0,
 				attachments: []
 			}],
-			selectedBoardIndex: "",
-			selectedNoteIndex: "",
+			selectedBoardId: "",
+			selectedNoteId: "",
 			isNoteSelected: false
 		};
 	}
 
-	handleToSelectBoard = async (idx) => {
-		this.setState({ selectedBoardIndex: idx }); // setState is asynchronous
+	handleToSelectBoard = async (id) => {
+		this.setState({ selectedBoardId: id }); // setState is asynchronous
 		try {
-			const noteList = await getNotesByBoardId(idx);
+			const noteList = await getNotesByBoardId(id);
 			this.setState({ noteList: noteList, isNoteSelected: false });
 		} catch (e) {
 			alert(e);
@@ -49,7 +48,7 @@ class App extends Component {
 	}
 
 	handleToSelectNote = (idx) => {
-		this.setState({ selectedNoteIndex: idx, isNoteSelected: true });
+		this.setState({ selectedNoteId: idx, isNoteSelected: true });
 		window.scrollTo(0, 0);
 	}
 
@@ -58,9 +57,9 @@ class App extends Component {
 			let temp_user_id = 'some-owner-id'; //TODO: Change after adding authoriaztion 
 			const boardList = await getBoards(temp_user_id);
 			this.setState({
-				selectedBoardIndex: boardList[0].id
+				selectedBoardId: boardList[0].id
 			});
-			const noteList = await getNotesByBoardId(this.state.selectedBoardIndex);
+			const noteList = await getNotesByBoardId(this.state.selectedBoardId);
 			this.setState({ ...this.state, boardList, noteList });
 		} catch (e) {
 			alert(e);
@@ -78,7 +77,7 @@ class App extends Component {
 				</Grid>
 				<Grid item md={10} xs={6}>
 					{!this.state.isNoteSelected && <NoteList notes={this.state.noteList} handleToSelectNote={this.handleToSelectNote.bind(this)} />}
-					{this.state.isNoteSelected && <Note note={this.state.noteList[this.state.selectedNoteIndex]} />}
+					{this.state.isNoteSelected && <Note note={this.state.noteList[this.state.selectedNoteId]} />}
 				</Grid>
 			</Grid>
 		);

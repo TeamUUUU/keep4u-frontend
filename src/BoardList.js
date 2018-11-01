@@ -11,9 +11,9 @@ class BoardList extends Component {
 		};
 	}
 
-	onClickCallback(event, idx) {
+	onClickCallback(event, idx, id) {
 		this.setState({ selectedBoardIndex: idx });
-		this.props.handleToSelectBoard(idx);
+		this.props.handleToSelectBoard(id);
 	}
 
 	render() {
@@ -23,7 +23,7 @@ class BoardList extends Component {
 				key={idx}
 				button
 				selected={this.state.selectedBoardIndex === idx}
-				onClick={event => this.onClickCallback(event, idx)}
+				onClick={event => this.onClickCallback(event, idx, board.id)}
 			>
 				<ListItemText
 					primary={board.title}
