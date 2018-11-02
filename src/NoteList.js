@@ -78,10 +78,8 @@ class NoteList extends Component {
 		)
 
 		return (
-			<React.Fragment>
-				<Grid container spacing={24}>
-					{notes.map(toList)}
-				</Grid>
+			<Grid container spacing={24}>
+				{notes.map(toList)}
 				<Button
 					style={style}
 					variant="fab"
@@ -92,7 +90,7 @@ class NoteList extends Component {
 				>
 					<AddIcon />
 				</Button>
-			</React.Fragment>
+			</Grid>
 		);
 	}
 }

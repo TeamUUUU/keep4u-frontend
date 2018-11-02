@@ -57,19 +57,34 @@ class App extends Component {
 
 	handleToAddNote = () => {
 		this.setState({ isAddingNote: true });
-		window.scrollTo(0, 0);	 
+		window.scrollTo(0, 0);
 	}
 
 	handleToDeleteNote = (idx) => {
-		try { 
+		try {
 			// deleteNote(id); //TODO: delete from server
 			let updatedNoteList = this.state.noteList;
 			updatedNoteList.splice(idx, 1);
-			this.setState({noteList: updatedNoteList});
+			this.setState({ noteList: updatedNoteList });
 		} catch (e) {
 			alert(e);
 		}
-		window.scrollTo(0, 0);	 
+	}
+
+	handleToAddBoard = (title) => {
+		try {
+			let newBoard = {
+				id: "",
+				title: title,
+				description: ""
+			}
+			//let newBoard = addBoard(id); //TODO: add to server
+			let updatedBoardList = this.state.boardList;
+			updatedBoardList.unshift(newBoard);
+			this.setState({ boardList: updatedBoardList });
+		} catch (e) {
+			alert(e);
+		}
 	}
 
 	handleSaveNote = async (note) => {
@@ -83,7 +98,7 @@ class App extends Component {
 				alert(e);
 			}
 		}
-		else if(!this.state.isAddingNote) {
+		else if (!this.state.isAddingNote) {
 			try {
 				const noteList = await putNote(note, this.state.selectedBoardId);
 				this.setState({ noteList: noteList, isNoteSelected: false, isAddingNote: false });
@@ -117,6 +132,7 @@ class App extends Component {
 					<BoardList
 						boards={this.state.boardList}
 						handleToSelectBoard={this.handleToSelectBoard.bind(this)}
+						handleToAddBoard={this.handleToAddBoard.bind(this)}
 					/>
 				</Grid>
 				<Grid item md={10} xs={6}>
