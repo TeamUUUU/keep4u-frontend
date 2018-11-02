@@ -6,7 +6,9 @@ import Typography from '@material-ui/core/Typography';
 import ReactMarkdown from 'react-markdown';
 import Button from '@material-ui/core/Button';
 import AddIcon from '@material-ui/icons/Add';
-
+import IconButton from '@material-ui/core/IconButton';
+import ClearIcon from '@material-ui/icons/Clear';
+import CardActions from '@material-ui/core/CardActions';
 
 
 class NoteList extends Component {
@@ -23,6 +25,9 @@ class NoteList extends Component {
 	onClickAddButtonCallback() {
 		this.setState({ isAddingNewNote: true })
 		this.props.handleToAddNote();
+	}
+	onClickDeleteButtonCallback(idx) {
+		this.props.handleToDeleteNote(idx);
 	}
 
 	render() {
@@ -47,9 +52,11 @@ class NoteList extends Component {
 					style={{
 						minHeight: '20vh'
 					}}
-					onClick={() => this.onClickCallback(idx)}
+
 				>
-					<CardContent>
+					<CardContent
+						onClick={() => this.onClickCallback(idx)}
+					>
 						<Typography variant="h5" component="h2" >
 							{note.title}
 						</Typography>
@@ -57,9 +64,19 @@ class NoteList extends Component {
 							{note.content}
 						</ReactMarkdown>
 					</CardContent>
+
+					<CardActions>
+						<IconButton
+							aria-label="Delete"
+							onClick={() => this.onClickDeleteButtonCallback(idx)}
+						>
+							<ClearIcon />
+						</IconButton>
+					</CardActions>
 				</Card>
 			</Grid>
 		)
+
 		return (
 			<React.Fragment>
 				<Grid container spacing={24}>

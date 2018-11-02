@@ -57,7 +57,19 @@ class App extends Component {
 
 	handleToAddNote = () => {
 		this.setState({ isAddingNote: true });
-		window.scrollTo(0, 0);
+		window.scrollTo(0, 0);	 
+	}
+
+	handleToDeleteNote = (idx) => {
+		try { 
+			// deleteNote(id); //TODO: delete from server
+			let updatedNoteList = this.state.noteList;
+			updatedNoteList.splice(idx, 1);
+			this.setState({noteList: updatedNoteList});
+		} catch (e) {
+			alert(e);
+		}
+		window.scrollTo(0, 0);	 
 	}
 
 	handleSaveNote = async (note) => {
@@ -111,6 +123,7 @@ class App extends Component {
 					{!this.state.isNoteSelected && !this.state.isAddingNote &&
 						<NoteList
 							notes={this.state.noteList}
+							handleToDeleteNote={this.handleToDeleteNote.bind(this)}
 							handleToSelectNote={this.handleToSelectNote.bind(this)}
 							handleToAddNote={this.handleToAddNote.bind(this)}
 						/>
