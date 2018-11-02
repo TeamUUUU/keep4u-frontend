@@ -128,14 +128,14 @@ class App extends Component {
 				<Grid item md={12} xs={12}>
 					<NavBar />
 				</Grid>
-				<Grid item md={2} xs={6}>
+				<Grid item md={3} xs={6}>
 					<BoardList
 						boards={this.state.boardList}
 						handleToSelectBoard={this.handleToSelectBoard.bind(this)}
 						handleToAddBoard={this.handleToAddBoard.bind(this)}
 					/>
 				</Grid>
-				<Grid item md={10} xs={6}>
+				<Grid item md={9} xs={6}>
 					{!this.state.isNoteSelected && !this.state.isAddingNote &&
 						<NoteList
 							notes={this.state.noteList}
