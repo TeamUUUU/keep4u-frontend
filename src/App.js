@@ -8,7 +8,11 @@ import {
 	getNotesByBoardId,
 	getSearchNotes,
 	postNewNote,
-	putNote
+	putNote,
+	postNewBoard,
+	deleteNote,
+	deleteAttachment,
+	deleteBoard
 } from './API';
 import BoardList from './BoardList';
 import NoteList from './NoteList';
@@ -62,7 +66,8 @@ class App extends Component {
 
 	handleToDeleteNote = (idx) => {
 		try {
-			// deleteNote(id); //TODO: delete from server
+			let id = this.state.noteList[idx].id;
+			deleteNote(id);
 			let updatedNoteList = this.state.noteList;
 			updatedNoteList.splice(idx, 1);
 			this.setState({ noteList: updatedNoteList });
@@ -71,16 +76,18 @@ class App extends Component {
 		}
 	}
 
-	handleToAddBoard = (title) => {
+	handleToAddBoard = async (title) => {
 		try {
 			let newBoard = {
 				id: "",
 				title: title,
 				description: ""
 			}
-			//let newBoard = addBoard(id); //TODO: add to server
+			let temp_user_id = 'some-owner-id'; //TODO: Change after adding authoriaztion
+			let temp_collaboration = ['some-owner-id']; //TODO: Change after adding authoriaztion
+			let addedBoard = await postNewBoard(newBoard, temp_user_id, temp_collaboration);
 			let updatedBoardList = this.state.boardList;
-			updatedBoardList.unshift(newBoard);
+			updatedBoardList.unshift(addedBoard);
 			this.setState({ boardList: updatedBoardList });
 		} catch (e) {
 			alert(e);

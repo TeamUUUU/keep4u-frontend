@@ -27,6 +27,19 @@ function postData(url, data) {
 		.then(response => response.json()); // parses response to JSON
 }
 
+function deleteDataById(url, id) {
+	return fetch(url, {
+		method: "DELETE",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify({
+			id: id
+		})
+	})
+		.then(response => response.json())
+}
+
 function patchData(url, data) {
 	// Default options are marked with *
 	return fetch(url, {
@@ -93,11 +106,32 @@ export const getSearchNotes = (text, limit, asc) => {
 
 export const postNewNote = (note, boardID) => {
 	const url = new URL(`boards/${boardID}/notes`, API_URL);
-	console.log(url, note);
 	return postData(url, note);
 };
 
 export const putNote = (note, noteID) => {
 	const url = new URL(`notes/${noteID}`, API_URL);
 	return patchData(url, note);
-}
+};
+
+export const postNewBoard = (board, owner_id, collaboration) => {
+	const url = new URL(`boards`, API_URL);
+	board.owner_id = owner_id;
+	board.collaboration = collaboration;
+	return postData(url, board);
+};
+
+export const deleteNote = (noteID) => {
+	const url = new URL(`notes/${noteID}`, API_URL);
+	return deleteDataById(url, noteID);
+};
+
+export const deleteBoard = (boardID) => {
+	const url = new URL(`boards/${boardID}`, API_URL);
+	return deleteDataById(url, boardID);
+};
+
+export const deleteAttachment = (attachmentID) => {
+	const url = new URL(`attachments/${attachmentID}`, API_URL);
+	return deleteDataById(url, attachmentID);
+};
