@@ -27,14 +27,12 @@ class Note extends Component {
 	}
 
 	onChangeTitleCallBack(value) {
-		console.log(value)
 		let note = this.props.note;
 		note.title = value;
 		this.setState({ note: note });
 	}
 
 	onChangeContentCallBack(value) {
-		console.log(value)
 		let note = this.props.note;
 		note.content = value;
 		this.setState({ note: note });

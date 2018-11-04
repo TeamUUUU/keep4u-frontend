@@ -138,7 +138,10 @@ class App extends Component {
 		}
 		else if (!this.state.isAddingNote) {
 			try {
-				const noteList = await putNote(note, this.state.selectedBoardId);
+				let id = this.state.noteList[this.state.selectedNoteId].id;
+				const newNote = await putNote(note, id);
+				let noteList = this.state.noteList;
+				noteList[noteList.findIndex(f => f.id === newNote.id)] = newNote;
 				this.setState({ noteList: noteList, isNoteSelected: false, isAddingNote: false });
 			} catch (e) {
 				alert(e);
