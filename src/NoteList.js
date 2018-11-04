@@ -9,6 +9,7 @@ import AddIcon from '@material-ui/icons/Add';
 import IconButton from '@material-ui/core/IconButton';
 import ClearIcon from '@material-ui/icons/Clear';
 import CardActions from '@material-ui/core/CardActions';
+import { CardHeader } from '@material-ui/core';
 
 
 class NoteList extends Component {
@@ -54,25 +55,24 @@ class NoteList extends Component {
 					}}
 
 				>
+					<CardHeader
+						title={note.title}
+						action={
+							<IconButton
+								aria-label="Delete"
+								onClick={() => this.onClickDeleteButtonCallback(idx)}
+							>
+								<ClearIcon />
+							</IconButton>
+						}
+					/>
 					<CardContent
 						onClick={() => this.onClickCallback(idx)}
 					>
-						<Typography variant="h5" component="h2" >
-							{note.title}
-						</Typography>
 						<ReactMarkdown>
 							{note.content}
 						</ReactMarkdown>
 					</CardContent>
-
-					<CardActions>
-						<IconButton
-							aria-label="Delete"
-							onClick={() => this.onClickDeleteButtonCallback(idx)}
-						>
-							<ClearIcon />
-						</IconButton>
-					</CardActions>
 				</Card>
 			</Grid>
 		)
