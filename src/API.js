@@ -33,7 +33,7 @@ function deleteDataById(url) {
 			"Content-Type": "application/json",
 		}
 	})
-		.then(response => response.json())
+		.then(response => response)
 }
 
 function patchData(url, data) {
