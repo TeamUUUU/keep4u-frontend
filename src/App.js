@@ -12,7 +12,8 @@ import {
 	postNewBoard,
 	deleteNote,
 	deleteAttachment,
-	deleteBoard
+	deleteBoard,
+	putBoard
 } from './API';
 import BoardList from './BoardList';
 import NoteList from './NoteList';
@@ -76,16 +77,46 @@ class App extends Component {
 		}
 	}
 
-	handleToAddBoard = async (title) => {
+	handleToDeleteBoard = (idx) => {
+		try {
+			let id = this.state.boardList[idx].id;
+			deleteBoard(id);
+			let updatedBoardList = this.state.boardList;
+			updatedBoardList.splice(idx, 1);
+			this.setState({ boardList: updatedBoardList });
+		} catch (e) {
+			alert(e);
+		}
+	}
+
+	handleToAddBoard = async (title, description) => {
 		try {
 			let newBoard = {
 				id: "",
 				title: title,
-				description: ""
+				description: description
 			}
 			let temp_user_id = 'some-owner-id'; //TODO: Change after adding authoriaztion
 			let temp_collaboration = ['some-owner-id']; //TODO: Change after adding authoriaztion
 			let addedBoard = await postNewBoard(newBoard, temp_user_id, temp_collaboration);
+			let updatedBoardList = this.state.boardList;
+			updatedBoardList.unshift(addedBoard);
+			this.setState({ boardList: updatedBoardList });
+		} catch (e) {
+			alert(e);
+		}
+	}
+
+	handleToEditBoard = async (title, description) => {
+		try {
+			let updatedBoard = {
+				id: "",
+				title: title,
+				description: description
+			}
+			let temp_user_id = 'some-owner-id'; //TODO: Change after adding authoriaztion
+			let temp_collaboration = ['some-owner-id']; //TODO: Change after adding authoriaztion
+			let addedBoard = await putBoard(updatedBoard, temp_user_id, temp_collaboration);
 			let updatedBoardList = this.state.boardList;
 			updatedBoardList.unshift(addedBoard);
 			this.setState({ boardList: updatedBoardList });
@@ -140,6 +171,8 @@ class App extends Component {
 						boards={this.state.boardList}
 						handleToSelectBoard={this.handleToSelectBoard.bind(this)}
 						handleToAddBoard={this.handleToAddBoard.bind(this)}
+						handleToDeleteBoard={this.handleToDeleteBoard.bind(this)}
+						handleToEditBoard={this.handleToDeleteBoard.bind(this)}
 					/>
 				</Grid>
 				<Grid item md={9} xs={6}>

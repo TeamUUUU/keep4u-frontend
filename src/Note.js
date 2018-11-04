@@ -73,7 +73,7 @@ class Note extends Component {
 						>
 						</TextField >
 					</CardContent>
-					<CardActions>	{/*TODO: add save action handle*/}
+					<CardActions>	
 						<IconButton
 							aria-label="Save"
 							onClick={() => this.onClickSaveButtonCallback()}

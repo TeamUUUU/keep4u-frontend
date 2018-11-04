@@ -4,6 +4,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import TextField from '@material-ui/core/TextField';
 import { Paper } from '@material-ui/core';
+import SaveIcon from '@material-ui/icons/Save';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import IconButton from '@material-ui/core/IconButton';
 import ClearIcon from '@material-ui/icons/Clear';
@@ -14,7 +15,10 @@ class BoardList extends Component {
 		super(props);
 		this.state = {
 			selectedBoardIndex: 0,
-			createTitle: ''
+			createTitle: '',
+			createDescription: '',
+			description: '',
+			title: ''
 		};
 	}
 
@@ -23,9 +27,12 @@ class BoardList extends Component {
 		this.props.handleToSelectBoard(this.props.boards[idx].id);
 	}
 
-	onChangeCreateCallBack(value) {
-		console.log(value)
+	onChangeCreateTitleCallBack(value) {
 		this.setState({ createTitle: value });
+	}
+
+	onChangeCreateDescriptionCallBack(value) {
+		this.setState({ createDescription: value });
 	}
 
 	handleKeyPress = (event) => {
@@ -35,14 +42,17 @@ class BoardList extends Component {
 		}
 	}
 
-	onClickEditCallback(event, idx) {
-		//TODO:
-		console.log(idx);
+	onClickCreateCallBack = () => {
+		this.props.handleToAddBoard(this.state.createTitle, this.state.createDescription)
 	}
 
-	onClickDeleteCallback(event, idx) {
-		//TODO:
-		console.log(idx);
+	onClickEditCallback(idx) {
+		// TODO: add text editor to get new title and description
+		// this.props.handleToEditBoard(this.state.title, this.state.description)
+	}
+
+	onClickDeleteCallback(idx) {
+		this.props.handleToDeleteBoard(idx);
 	}
 
 	render() {
@@ -60,12 +70,11 @@ class BoardList extends Component {
 					secondary={board.description}
 				>
 				</ListItemText>
-				{/* TODO: add callbacks to edit and delete board buttons */}
 				{(this.state.selectedBoardIndex === idx) && <ListItemSecondaryAction>
-					<IconButton aria-label="Clear" onClick={event => this.onClickEditCallback(event, idx)}>
+					<IconButton aria-label="Clear" onClick={() => this.onClickDeleteCallback(idx)}>
 						<ClearIcon fontSize="small" />
 					</IconButton>
-					<IconButton aria-label="Edit" onClick={event => this.onClickEditCallback(event, idx)}>
+					<IconButton aria-label="Edit" onClick={() => this.onClickEditCallback(idx)}>
 						<CreateIcon fontSize="small" />
 					</IconButton>
 				</ListItemSecondaryAction>}
@@ -76,7 +85,7 @@ class BoardList extends Component {
 			<React.Fragment>
 				<List component="nav">
 					<TextField
-
+						multiline
 						placeholder={'New Board...'}
 						label={'New Board...'}
 						style={{
@@ -84,9 +93,31 @@ class BoardList extends Component {
 							marginBottom: 3
 						}}
 						onKeyPress={this.handleKeyPress}
-						onChange={(event) => this.onChangeCreateCallBack(event.target.value)}
+						onChange={(event) => this.onChangeCreateTitleCallBack(event.target.value)}
 					>
 					</TextField>
+					<TextField
+						multiline
+						placeholder={'Description...'}
+						label={'Description...'}
+						style={{
+							left: 25,
+							marginBottom: 3
+						}}
+						onKeyPress={this.handleKeyPress}
+						onChange={(event) => this.onChangeCreateDescriptionCallBack(event.target.value)}
+					>
+					</TextField>
+					<IconButton
+						style={{
+							left: 25,
+							marginBottom: 3
+						}}
+						aria-label="Save"
+						onClick={() => this.onClickCreateCallBack()}
+					>
+						<SaveIcon />
+					</IconButton>
 					{boards.map(toList)}
 				</List>
 

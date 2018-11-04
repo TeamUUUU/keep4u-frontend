@@ -10,7 +10,6 @@ const responseHandler = (response) => {
 
 function postData(url, data) {
 	// Default options are marked with *
-	console.log(JSON.stringify(data))
 	return fetch(url, {
 		method: "POST", // *GET, POST, PUT, DELETE, etc.
 		mode: "cors", // no-cors, cors, *same-origin
@@ -27,15 +26,12 @@ function postData(url, data) {
 		.then(response => response.json()); // parses response to JSON
 }
 
-function deleteDataById(url, id) {
+function deleteDataById(url) {
 	return fetch(url, {
 		method: "DELETE",
 		headers: {
 			"Content-Type": "application/json",
-		},
-		body: JSON.stringify({
-			id: id
-		})
+		}
 	})
 		.then(response => response.json())
 }
@@ -114,6 +110,11 @@ export const putNote = (note, noteID) => {
 	return patchData(url, note);
 };
 
+export const putBoard = (board, boardID) => {
+	const url = new URL(`boards/${boardID}`, API_URL);
+	return patchData(url, board); 
+}
+
 export const postNewBoard = (board, owner_id, collaboration) => {
 	const url = new URL(`boards`, API_URL);
 	board.owner_id = owner_id;
@@ -123,15 +124,15 @@ export const postNewBoard = (board, owner_id, collaboration) => {
 
 export const deleteNote = (noteID) => {
 	const url = new URL(`notes/${noteID}`, API_URL);
-	return deleteDataById(url, noteID);
+	return deleteDataById(url);
 };
 
 export const deleteBoard = (boardID) => {
 	const url = new URL(`boards/${boardID}`, API_URL);
-	return deleteDataById(url, boardID);
+	return deleteDataById(url);
 };
 
 export const deleteAttachment = (attachmentID) => {
 	const url = new URL(`attachments/${attachmentID}`, API_URL);
-	return deleteDataById(url, attachmentID);
+	return deleteDataById(url);
 };
