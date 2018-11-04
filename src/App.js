@@ -92,7 +92,6 @@ class App extends Component {
 	handleToAddBoard = async (title, description) => {
 		try {
 			let newBoard = {
-				id: "",
 				title: title,
 				description: description
 			}
@@ -101,24 +100,22 @@ class App extends Component {
 			let addedBoard = await postNewBoard(newBoard, temp_user_id, temp_collaboration);
 			let updatedBoardList = this.state.boardList;
 			updatedBoardList.unshift(addedBoard);
-			this.setState({ boardList: updatedBoardList });
+			this.setState({ 
+				boardList: updatedBoardList, 
+				noteList: []
+			});
 		} catch (e) {
 			alert(e);
 		}
 	}
 
-	handleToEditBoard = async (title, description) => {
+	//TODO: send request when backend is fixed
+	handleToEditBoard = async (board, idx) => {
 		try {
-			let updatedBoard = {
-				id: "",
-				title: title,
-				description: description
-			}
-			let temp_user_id = 'some-owner-id'; //TODO: Change after adding authoriaztion
-			let temp_collaboration = ['some-owner-id']; //TODO: Change after adding authoriaztion
-			let addedBoard = await putBoard(updatedBoard, temp_user_id, temp_collaboration);
+			let updatedBoard = board;
+			let addedBoard = board; //await putBoard(updatedBoard, updatedBoard.id);
 			let updatedBoardList = this.state.boardList;
-			updatedBoardList.unshift(addedBoard);
+			updatedBoardList[idx] = addedBoard;
 			this.setState({ boardList: updatedBoardList });
 		} catch (e) {
 			alert(e);
@@ -175,7 +172,7 @@ class App extends Component {
 						handleToSelectBoard={this.handleToSelectBoard.bind(this)}
 						handleToAddBoard={this.handleToAddBoard.bind(this)}
 						handleToDeleteBoard={this.handleToDeleteBoard.bind(this)}
-						handleToEditBoard={this.handleToDeleteBoard.bind(this)}
+						handleToEditBoard={this.handleToEditBoard.bind(this)}
 					/>
 				</Grid>
 				<Grid item md={9} xs={6}>

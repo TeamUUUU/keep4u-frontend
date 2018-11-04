@@ -3,7 +3,6 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import TextField from '@material-ui/core/TextField';
-import { Paper } from '@material-ui/core';
 import SaveIcon from '@material-ui/icons/Save';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import IconButton from '@material-ui/core/IconButton';
@@ -17,13 +16,19 @@ class BoardList extends Component {
 			selectedBoardIndex: 0,
 			createTitle: '',
 			createDescription: '',
-			description: '',
-			title: ''
+			isEdited: false,
+			editTitle: '',
+			editDescription: '',
+			isCreateSelected: false,
 		};
 	}
 
 	onClickCallback(event, idx) {
-		this.setState({ selectedBoardIndex: idx });
+		this.setState({
+			isEdited: false,
+			selectedBoardIndex: idx,
+			isCreateSelected: false,
+		});
 		this.props.handleToSelectBoard(this.props.boards[idx].id);
 	}
 
@@ -35,24 +40,53 @@ class BoardList extends Component {
 		this.setState({ createDescription: value });
 	}
 
-	handleKeyPress = (event) => {
-		if (event.key === 'Enter') {
-			this.props.handleToAddBoard(this.state.createTitle);
-			;
-		}
-	}
-
 	onClickCreateCallBack = () => {
+		this.setState({
+			createDescription: '',
+			createTitle: '',
+			isCreateSelected: false,
+			selectedBoardIndex: 0
+		});
 		this.props.handleToAddBoard(this.state.createTitle, this.state.createDescription)
 	}
 
 	onClickEditCallback(idx) {
-		// TODO: add text editor to get new title and description
-		// this.props.handleToEditBoard(this.state.title, this.state.description)
+		this.setState({
+			isEdited: true,
+			editTitle: this.props.boards[this.state.selectedBoardIndex].title,
+			editDescription: this.props.boards[this.state.selectedBoardIndex].description,
+			isCreateSelected: false
+		});
 	}
 
+	//TODO: Bug - need to properly update notelist view
 	onClickDeleteCallback(idx) {
 		this.props.handleToDeleteBoard(idx);
+	}
+
+	onCreateSelectedCallBack = (event) => {
+		this.setState({ isCreateSelected: true, isEdited: false });
+	}
+
+	onChangeEditTitleCallBack(value) {
+		this.setState({ editTitle: value });
+	}
+
+	onChangeEditDescriptionCallBack(value) {
+		this.setState({ editDescription: value });
+	}
+
+	onClickSaveCallback() {
+		this.setState({
+			isEdited: false
+		});
+		let idx = this.state.selectedBoardIndex;
+		let board = {
+			id: this.props.boards[idx].id,
+			title: this.state.editTitle,
+			description: this.state.editDescription
+		};
+		this.props.handleToEditBoard(board, idx);
 	}
 
 	render() {
@@ -60,70 +94,116 @@ class BoardList extends Component {
 		const toList = (board, idx) => (
 			<ListItem
 				key={idx}
-				button
+				button={!this.state.isEdited}
 				selected={this.state.selectedBoardIndex === idx}
-				onClick={event => this.onClickCallback(event, idx)}
+				onClick={
+					(this.state.selectedBoardIndex === idx) ?
+						null : ((event) => this.onClickCallback(event, idx)) //prevents boardClick event on press edit button on selected board
+				}
 			>
-
-				<ListItemText
+				{!(this.state.selectedBoardIndex === idx) && <ListItemText
 					primary={board.title}
 					secondary={board.description}
 				>
-				</ListItemText>
-				{(this.state.selectedBoardIndex === idx) && <ListItemSecondaryAction>
-					<IconButton aria-label="Clear" onClick={() => this.onClickDeleteCallback(idx)}>
-						<ClearIcon fontSize="small" />
-					</IconButton>
-					<IconButton aria-label="Edit" onClick={() => this.onClickEditCallback(idx)}>
-						<CreateIcon fontSize="small" />
-					</IconButton>
-				</ListItemSecondaryAction>}
+				</ListItemText>}
+
+				{(this.state.selectedBoardIndex === idx) && <React.Fragment>
+					{!this.state.isEdited && <React.Fragment>
+						<ListItemText
+							primary={board.title}
+							secondary={board.description}
+						>
+						</ListItemText>
+
+						<ListItemSecondaryAction>
+							<IconButton
+								aria-label="Delete"
+								onClick={() => this.onClickDeleteCallback(idx)}
+							>
+								<ClearIcon fontSize="small" />
+							</IconButton>
+							<IconButton
+								aria-label="Edit"
+								onClick={() => this.onClickEditCallback(idx)}
+							>
+								<CreateIcon fontSize="small" />
+							</IconButton>
+						</ListItemSecondaryAction>
+					</React.Fragment>}
+
+					{this.state.isEdited && <React.Fragment>
+						<List>
+							<TextField
+								placeholder={'Title'}
+								label={'Title'}
+								value={this.state.editTitle}
+								onChange={(event) => this.onChangeEditTitleCallBack(event.target.value)}
+							/>
+							<TextField
+								placeholder={'Description'}
+								label={'Description'}
+								value={this.state.editDescription}
+								onChange={(event) => this.onChangeEditDescriptionCallBack(event.target.value)}
+							/>
+						</List>
+						<ListItemSecondaryAction>
+							<IconButton
+								aria-label="Save"
+								onClick={() => this.onClickSaveCallback()}
+							>
+								<SaveIcon />
+							</IconButton>
+						</ListItemSecondaryAction>
+					</React.Fragment>}
+				</React.Fragment>}
 
 			</ListItem>
 		)
 		return (
 			<React.Fragment>
 				<List component="nav">
-					<TextField
-						multiline
-						placeholder={'New Board...'}
-						label={'New Board...'}
-						style={{
-							left: 25,
-							marginBottom: 3
-						}}
-						onKeyPress={this.handleKeyPress}
-						onChange={(event) => this.onChangeCreateTitleCallBack(event.target.value)}
-					>
-					</TextField>
-					<TextField
-						multiline
-						placeholder={'Description...'}
-						label={'Description...'}
-						style={{
-							left: 25,
-							marginBottom: 3
-						}}
-						onKeyPress={this.handleKeyPress}
-						onChange={(event) => this.onChangeCreateDescriptionCallBack(event.target.value)}
-					>
-					</TextField>
-					<IconButton
-						style={{
-							left: 25,
-							marginBottom: 3
-						}}
-						aria-label="Save"
-						onClick={() => this.onClickCreateCallBack()}
-					>
-						<SaveIcon />
-					</IconButton>
+					<List>
+						<TextField
+							placeholder={'New Board...'}
+							label={'New Board...'}
+							value={this.state.createTitle}
+							style={{
+								left: 25,
+								marginBottom: 3
+							}}
+							onChange={(event) => this.onChangeCreateTitleCallBack(event.target.value)}
+							onSelect={this.onCreateSelectedCallBack}
+						>
+						</TextField>
+						{this.state.isCreateSelected &&
+							<React.Fragment>
+								<TextField
+									placeholder={'Description...'}
+									label={'Description...'}
+									value={this.state.createDescription}
+									style={{
+										left: 25,
+										marginBottom: 3
+									}}
+									onChange={(event) => this.onChangeCreateDescriptionCallBack(event.target.value)
+									}
+								>
+								</TextField>
+								<IconButton
+									style={{
+										left: 25,
+										marginBottom: 3
+									}}
+									aria-label="Save"
+									onClick={() => this.onClickCreateCallBack()}
+								>
+									<SaveIcon />
+								</IconButton>
+							</React.Fragment>
+						}
+					</List>
 					{boards.map(toList)}
 				</List>
-
-				<Paper elevation={1}>
-
-				</Paper>
 			</React.Fragment>
 		);
 	}
