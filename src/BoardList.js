@@ -23,7 +23,7 @@ class BoardList extends Component {
 		};
 	}
 
-	onClickCallback(event, idx) {
+	onClickCallback(idx) {
 		this.setState({
 			isEdited: false,
 			selectedBoardIndex: idx,
@@ -47,6 +47,7 @@ class BoardList extends Component {
 			isCreateSelected: false,
 			selectedBoardIndex: 0
 		});
+		this.onClickCallback(0);
 		this.props.handleToAddBoard(this.state.createTitle, this.state.createDescription)
 	}
 
@@ -61,6 +62,8 @@ class BoardList extends Component {
 
 	//TODO: Bug - need to properly update notelist view
 	onClickDeleteCallback(idx) {
+		this.onClickCallback(idx?0:1)
+
 		this.props.handleToDeleteBoard(idx);
 	}
 
@@ -98,7 +101,7 @@ class BoardList extends Component {
 				selected={this.state.selectedBoardIndex === idx}
 				onClick={
 					(this.state.selectedBoardIndex === idx) ?
-						null : ((event) => this.onClickCallback(event, idx)) //prevents boardClick event on press edit button on selected board
+						null : (() => this.onClickCallback(idx))
 				}
 			>
 				{!(this.state.selectedBoardIndex === idx) && <ListItemText

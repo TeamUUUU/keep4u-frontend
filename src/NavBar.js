@@ -1,10 +1,11 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import SearchIcon from '@material-ui/icons/Search';
 import InputBase from '@material-ui/core/InputBase';
-import { Grid } from '@material-ui/core';
+import { Grid, OutlinedInput } from '@material-ui/core';
+import { fade } from '@material-ui/core/styles/colorManipulator';
 
 class NavBar extends Component {
 	constructor(props) {
@@ -20,21 +21,32 @@ class NavBar extends Component {
 			<div>
 				<AppBar position="static">
 					<Toolbar>
-						<Typography variant="title" color="inherit">
-							Keep For You
-                		</Typography>
-						<div style={{
-							marginInlineStart: 60
-						}}>
-							<Grid container>
-								<SearchIcon />
+
+						<Grid
+							container
+							alignItems='baseline'
+							justify='space-between'
+						>
+							<Grid item>
+								<Typography variant="title" color="inherit">
+									Keep For You
+                				</Typography>
+							</Grid>
+							<Grid item>
 								<InputBase
-								// TODO: add onChange handler
+									// TODO: add onChange handler
 									placeholder="Search…"
-									color="inherit"
+									style={{
+										marginRight: '0.3rem',
+										width: '100%',
+										backgroundColor: fade('#ffffff', 0.2),
+										borderRadius: '0.5rem',
+										borderColor: '#ffffff',
+										paddingLeft: '0.5rem',
+									}}
 								/>
 							</Grid>
-						</div>
+						</Grid>
 					</Toolbar>
 				</AppBar>
 			</div>

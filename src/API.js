@@ -8,6 +8,17 @@ const responseHandler = (response) => {
 	throw new Error(response.status);
 };
 
+function putData(url, data) {
+	return fetch(url, {
+		method: "PUT",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify(data),
+	})
+		.then(response => response.json());
+}
+
 function postData(url, data) {
 	// Default options are marked with *
 	return fetch(url, {
@@ -112,13 +123,16 @@ export const putNote = (note, noteID) => {
 
 export const putBoard = (board, boardID) => {
 	const url = new URL(`boards/${boardID}`, API_URL);
-	return patchData(url, board); 
+	return putData(url, board);
 }
 
 export const postNewBoard = (board, owner_id, collaboration) => {
 	const url = new URL(`boards`, API_URL);
 	board.owner_id = owner_id;
 	board.collaboration = collaboration;
+	url.search = new URLSearchParams({
+		user_id: owner_id,
+	});
 	return postData(url, board);
 };
 

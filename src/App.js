@@ -99,7 +99,7 @@ class App extends Component {
 			let temp_collaboration = ['some-owner-id']; //TODO: Change after adding authoriaztion
 			let addedBoard = await postNewBoard(newBoard, temp_user_id, temp_collaboration);
 			let updatedBoardList = this.state.boardList;
-			updatedBoardList.unshift(addedBoard);
+			updatedBoardList.push(addedBoard);
 			this.setState({ 
 				boardList: updatedBoardList, 
 				noteList: []
@@ -109,11 +109,10 @@ class App extends Component {
 		}
 	}
 
-	//TODO: send request when backend is fixed
 	handleToEditBoard = async (board, idx) => {
 		try {
 			let updatedBoard = board;
-			let addedBoard = board; //await putBoard(updatedBoard, updatedBoard.id);
+			let addedBoard = await putBoard(updatedBoard, updatedBoard.id);
 			let updatedBoardList = this.state.boardList;
 			updatedBoardList[idx] = addedBoard;
 			this.setState({ boardList: updatedBoardList });
