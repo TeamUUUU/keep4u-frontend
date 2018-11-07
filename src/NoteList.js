@@ -14,7 +14,8 @@ class NoteList extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			isAddingNewNote: false
+			isAddingNewNote: false,
+			hoverIdx: null
 		};
 	}
 
@@ -27,6 +28,14 @@ class NoteList extends Component {
 	}
 	onClickDeleteButtonCallback(idx) {
 		this.props.handleToDeleteNote(idx);
+	}
+
+	onHoverInCallback(idx) {
+		this.setState({hoverIdx: idx});
+	}
+
+	onHoverOutCallback() {
+		this.setState({hoverIdx: null});
 	}
 
 	render() {
@@ -46,11 +55,12 @@ class NoteList extends Component {
 				md={3} xs={12}
 			>
 				<Card
-					elevation={5}
+					elevation={(this.state.hoverIdx === idx) ? 10 : 5}
 					style={{
 						minHeight: '20vh'
 					}}
-
+					onMouseEnter={() => this.onHoverInCallback(idx)}
+					onMouseLeave={() => this.onHoverOutCallback()}
 				>
 					<CardHeader
 						title={note.title}
