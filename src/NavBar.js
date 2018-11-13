@@ -29,7 +29,7 @@ class NavBar extends Component {
 						>
 							<Grid item>
 								<Typography variant="title" color="inherit">
-									Keep For You
+									Keep4u
                 				</Typography>
 							</Grid>
 							{/* <Grid item>

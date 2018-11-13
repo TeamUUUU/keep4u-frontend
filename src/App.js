@@ -13,31 +13,43 @@ import {
 import BoardList from './BoardList';
 import NoteList from './NoteList';
 import Grid from '@material-ui/core/Grid';
+import Modal from '@material-ui/core/Modal';
+import Button from '@material-ui/core/Button'
 import NavBar from './NavBar';
 import Note from './Note';
+import { GoogleLogin } from 'react-google-login';
+import { Card, CardHeader, CardContent } from '@material-ui/core';
 
 class App extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			boardList: [{
-				id: "",
-				title: "",
-				description: ""
-			}],
-			noteList: [{
-				id: "",
-				board_id: "",
-				title: "",
-				content: "",
-				created_at: 0,
-				attachments: []
-			}],
+			boardList: [],
+			noteList: [],
 			selectedBoardId: "",
 			selectedNoteId: "",
 			isNoteSelected: false,
-			isAddingNote: false
+			isAddingNote: false,
+			user_id: "",
+			expires_at: null,
+			loggedIn: false,
+			authObj: null
 		};
+		let token_id = localStorage.getItem('token_id');
+		let token_date = localStorage.getItem('token_date');
+		if (token_id === null) {
+			this.state.loggedIn = false;
+		}
+		else {
+			if (this.isTokenExpired(token_date)) {
+				this.state.loggedIn = false;
+			}
+			else {
+				this.state.loggedIn = true;
+				this.state.user_id = token_id;
+				this.state.expires_at = token_date;
+			}
+		}
 	}
 
 	handleToSelectBoard = async (id) => {
@@ -90,13 +102,12 @@ class App extends Component {
 				title: title,
 				description: description
 			}
-			let temp_user_id = 'some-owner-id'; //TODO: Change after adding authoriaztion
 			let temp_collaboration = ['some-owner-id']; //TODO: Change after adding authoriaztion
-			let addedBoard = await postNewBoard(newBoard, temp_user_id, temp_collaboration);
+			let addedBoard = await postNewBoard(newBoard, this.state.user_id, temp_collaboration);
 			let updatedBoardList = this.state.boardList;
 			updatedBoardList.push(addedBoard);
-			this.setState({ 
-				boardList: updatedBoardList, 
+			this.setState({
+				boardList: updatedBoardList,
 				noteList: []
 			});
 		} catch (e) {
@@ -140,17 +151,50 @@ class App extends Component {
 		}
 	}
 
+	responseOnSuccessGoogle = (response) => {
+		this.setState({
+			user_id: response.tokenObj.id_token,
+			expires_at: response.tokenObj.expires_at,
+			loggedIn: true,
+			authObj: response
+		});
+		localStorage.setItem('token_id', response.tokenObj.id_token);
+		localStorage.setItem('token_date', response.tokenObj.expires_at);
+	}
+
+	responseOnFailureGoogle = (response) => {
+		console.log(response);
+	}
+
+	isTokenExpired(token_date) {
+		return (token_date < Date.now())
+	}
+
+	updateToken() {
+		let response = this.state.authObj.reloadAuthResponse();
+		this.setState({
+			user_id: response.id_token,
+			expires_at: response.expires_at,
+			loggedIn: true,
+		});
+		localStorage.setItem('token_id', response.id_token);
+		localStorage.setItem('token_date', response.expires_at);
+	}
+
 	async componentDidMount() {
-		try {
-			let temp_user_id = 'some-owner-id'; //TODO: Change after adding authoriaztion 
-			const boardList = await getBoards(temp_user_id);
-			this.setState({
-				selectedBoardId: boardList[0].id
-			});
-			const noteList = await getNotesByBoardId(this.state.selectedBoardId);
-			this.setState({ ...this.state, boardList, noteList });
-		} catch (e) {
-			alert(e);
+		if (this.state.loggedIn) {
+			try {
+				const boardList = await getBoards(this.state.user_id);
+				if (boardList.length !== 0) {
+					this.setState({
+						selectedBoardId: boardList[0].id
+					});
+					const noteList = await getNotesByBoardId(this.state.selectedBoardId);
+					this.setState({ ...this.state, boardList, noteList });
+				}
+			} catch (e) {
+				alert(e);
+			}
 		}
 	}
 
@@ -160,37 +204,68 @@ class App extends Component {
 				<Grid item md={12} xs={12}>
 					<NavBar />
 				</Grid>
-				<Grid item md={3} xs={6}>
-					<BoardList
-						boards={this.state.boardList}
-						handleToSelectBoard={this.handleToSelectBoard.bind(this)}
-						handleToAddBoard={this.handleToAddBoard.bind(this)}
-						handleToDeleteBoard={this.handleToDeleteBoard.bind(this)}
-						handleToEditBoard={this.handleToEditBoard.bind(this)}
-					/>
-				</Grid>
-				<Grid item md={9} xs={6}>
-					{!this.state.isNoteSelected && !this.state.isAddingNote &&
-						<NoteList
-							notes={this.state.noteList}
-							handleToDeleteNote={this.handleToDeleteNote.bind(this)}
-							handleToSelectNote={this.handleToSelectNote.bind(this)}
-							handleToAddNote={this.handleToAddNote.bind(this)}
+				{!this.state.loggedIn &&
+					<Modal
+						open
+						style={{
+							display: 'flex',
+							height: '100vh'
+						}}>
+						<Card style={{ margin: 'auto' }}>
+							<CardHeader title={'Sign in with Google account'}>
+
+							</CardHeader>
+							<CardContent style={{ display: 'flex' }}>
+								<GoogleLogin
+									clientId="120245860173-ahk0sg483j7546ac4ft0aprhbjsorodk.apps.googleusercontent.com"
+									buttonText="Login"
+									render={(props) => <Button
+										onClick={props.onClick}
+										variant='contained'
+										color='primary'
+										style={{ margin: 'auto' }}
+									>
+										Sign in
+										</Button>}
+									onSuccess={this.responseOnSuccessGoogle.bind(this)}
+									onFailure={this.responseOnFailureGoogle.bind(this)}
+								/>
+							</CardContent>
+						</Card>
+					</Modal>}
+				{this.state.loggedIn && <React.Fragment>
+					<Grid item md={3} xs={6}>
+						<BoardList
+							boards={this.state.boardList}
+							handleToSelectBoard={this.handleToSelectBoard.bind(this)}
+							handleToAddBoard={this.handleToAddBoard.bind(this)}
+							handleToDeleteBoard={this.handleToDeleteBoard.bind(this)}
+							handleToEditBoard={this.handleToEditBoard.bind(this)}
 						/>
-					}
-					{this.state.isNoteSelected && !this.state.isAddingNote &&
-						<Note
-							note={this.state.noteList[this.state.selectedNoteId]}
-							handleSaveNote={this.handleSaveNote.bind(this)}
-						/>
-					}
-					{!this.state.isNoteSelected && this.state.isAddingNote &&
-						<Note
-							note={{}}
-							handleSaveNote={this.handleSaveNote.bind(this)}
-						/>
-					}
-				</Grid>
+					</Grid>
+					<Grid item md={9} xs={6}>
+						{!this.state.isNoteSelected && !this.state.isAddingNote &&
+							<NoteList
+								notes={this.state.noteList}
+								handleToDeleteNote={this.handleToDeleteNote.bind(this)}
+								handleToSelectNote={this.handleToSelectNote.bind(this)}
+								handleToAddNote={this.handleToAddNote.bind(this)}
+							/>
+						}
+						{this.state.isNoteSelected && !this.state.isAddingNote &&
+							<Note
+								note={this.state.noteList[this.state.selectedNoteId]}
+								handleSaveNote={this.handleSaveNote.bind(this)}
+							/>
+						}
+						{!this.state.isNoteSelected && this.state.isAddingNote &&
+							<Note
+								note={{}}
+								handleSaveNote={this.handleSaveNote.bind(this)}
+							/>
+						}
+					</Grid>
+				</React.Fragment>}
 			</Grid>
 		);
 	}

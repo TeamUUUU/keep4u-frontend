@@ -40,15 +40,15 @@ class BoardList extends Component {
 		this.setState({ createDescription: value });
 	}
 
-	onClickCreateCallBack = () => {
+	onClickCreateCallBack = async () => {
 		this.setState({
 			createDescription: '',
 			createTitle: '',
 			isCreateSelected: false,
 			selectedBoardIndex: 0
 		});
+		await this.props.handleToAddBoard(this.state.createTitle, this.state.createDescription)
 		this.onClickCallback(0);
-		this.props.handleToAddBoard(this.state.createTitle, this.state.createDescription)
 	}
 
 	onClickEditCallback(idx) {
@@ -62,8 +62,12 @@ class BoardList extends Component {
 
 	//TODO: Bug - need to properly update notelist view
 	onClickDeleteCallback(idx) {
-		this.onClickCallback(idx?0:1)
-
+		if (this.props.boards.length !== 1) {
+			this.onClickCallback(idx ? 0 : 1)
+		}
+		else {
+			this.setState({selectedBoardIndex: null});
+		}
 		this.props.handleToDeleteBoard(idx);
 	}
 
@@ -89,7 +93,14 @@ class BoardList extends Component {
 			title: this.state.editTitle,
 			description: this.state.editDescription
 		};
+		console.log(board);
 		this.props.handleToEditBoard(board, idx);
+	}
+
+	componentDidMount() {
+		if (this.props.boards.length === 0) {
+			this.setState({selectedBoardIndex: null});
+		}
 	}
 
 	render() {

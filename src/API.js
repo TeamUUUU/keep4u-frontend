@@ -123,7 +123,7 @@ export const putNote = (note, noteID) => {
 
 export const putBoard = (board, boardID) => {
 	const url = new URL(`boards/${boardID}`, API_URL);
-	return putData(url, board);
+	return patchData(url, board);
 }
 
 export const postNewBoard = (board, owner_id, collaboration) => {
