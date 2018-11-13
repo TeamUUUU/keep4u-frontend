@@ -1,17 +1,12 @@
 import React, { Component } from 'react';
 import './App.css';
 import {
-	getAttachmentById,
-	getBoardById,
 	getBoards,
-	getNoteByID,
 	getNotesByBoardId,
-	getSearchNotes,
 	postNewNote,
 	putNote,
 	postNewBoard,
 	deleteNote,
-	deleteAttachment,
 	deleteBoard,
 	putBoard
 } from './API';

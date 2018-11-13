@@ -32,7 +32,7 @@ class NavBar extends Component {
 									Keep For You
                 				</Typography>
 							</Grid>
-							<Grid item>
+							{/* <Grid item>
 								<InputBase
 									// TODO: add onChange handler
 									placeholder="Search…"
@@ -45,7 +45,7 @@ class NavBar extends Component {
 										paddingLeft: '0.5rem',
 									}}
 								/>
-							</Grid>
+							</Grid> */}
 						</Grid>
 					</Toolbar>
 				</AppBar>
