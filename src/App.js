@@ -91,6 +91,9 @@ class App extends Component {
 			let updatedBoardList = this.state.boardList;
 			updatedBoardList.splice(idx, 1);
 			this.setState({ boardList: updatedBoardList });
+			if (updatedBoardList.length === 0) {
+				this.setState({noteList: []});
+			}
 		} catch (e) {
 			alert(e);
 		}

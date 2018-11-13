@@ -98,8 +98,15 @@ class BoardList extends Component {
 	}
 
 	componentDidMount() {
+		console.log(this.props.boards);
 		if (this.props.boards.length === 0) {
 			this.setState({selectedBoardIndex: null});
+		}
+	}
+
+	componentWillReceiveProps(props) {
+		if ((props.boards.length !== 0) && (this.state.selectedBoardIndex === null)) {
+			this.setState({selectedBoardIndex: 0});
 		}
 	}
 
