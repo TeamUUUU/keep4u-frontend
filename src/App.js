@@ -101,6 +101,9 @@ class App extends Component {
 
 	handleToAddBoard = async (title, description) => {
 		try {
+			if (this.isTokenExpired(this.state.token_date)) {
+				this.updateToken();
+			}
 			let newBoard = {
 				title: title,
 				description: description
@@ -173,15 +176,27 @@ class App extends Component {
 		return (token_date < Date.now())
 	}
 
-	updateToken() {
+	setStateAsync(state) {		// allows await on setState
+		return new Promise((resolve) => {
+		  this.setState(state, resolve)
+		});
+	}
+
+	async updateToken() {
 		let response = this.state.authObj.reloadAuthResponse();
-		this.setState({
+		await this.setStateAsync({
 			user_id: response.id_token,
 			expires_at: response.expires_at,
 			loggedIn: true,
 		});
 		localStorage.setItem('token_id', response.id_token);
 		localStorage.setItem('token_date', response.expires_at);
+	}
+
+	handleToLogout() {
+		this.setState({loggedIn: false, authObj: null, user_id: "", expires_at: null});
+		localStorage.removeItem('token_id');
+		localStorage.removeItem('token_date');
 	}
 
 	async componentDidMount() {
@@ -203,9 +218,9 @@ class App extends Component {
 
 	render() {
 		return (
-			<Grid container spacing={24} style={{ width: '100%' }}>
+			<Grid container spacing={24} style={{ width: '100%', marginLeft: '0.1vw'}}>
 				<Grid item md={12} xs={12}>
-					<NavBar />
+					<NavBar handleToLogout={this.handleToLogout.bind(this)}/>
 				</Grid>
 				{!this.state.loggedIn &&
 					<Modal

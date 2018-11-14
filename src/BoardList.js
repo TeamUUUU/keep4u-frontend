@@ -60,7 +60,6 @@ class BoardList extends Component {
 		});
 	}
 
-	//TODO: Bug - need to properly update notelist view
 	onClickDeleteCallback(idx) {
 		if (this.props.boards.length !== 1) {
 			this.onClickCallback(idx ? 0 : 1)
@@ -98,7 +97,6 @@ class BoardList extends Component {
 	}
 
 	componentDidMount() {
-		console.log(this.props.boards);
 		if (this.props.boards.length === 0) {
 			this.setState({selectedBoardIndex: null});
 		}
@@ -189,8 +187,7 @@ class BoardList extends Component {
 							label={'New Board...'}
 							value={this.state.createTitle}
 							style={{
-								left: 25,
-								marginBottom: 3
+								
 							}}
 							onChange={(event) => this.onChangeCreateTitleCallBack(event.target.value)}
 							onSelect={this.onCreateSelectedCallBack}
@@ -203,8 +200,7 @@ class BoardList extends Component {
 									label={'Description...'}
 									value={this.state.createDescription}
 									style={{
-										left: 25,
-										marginBottom: 3
+										
 									}}
 									onChange={(event) => this.onChangeCreateDescriptionCallBack(event.target.value)
 									}

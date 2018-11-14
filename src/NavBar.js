@@ -6,6 +6,8 @@ import SearchIcon from '@material-ui/icons/Search';
 import InputBase from '@material-ui/core/InputBase';
 import { Grid, OutlinedInput } from '@material-ui/core';
 import { fade } from '@material-ui/core/styles/colorManipulator';
+import { GoogleLogout } from 'react-google-login';
+import Button from '@material-ui/core/Button'
 
 class NavBar extends Component {
 	constructor(props) {
@@ -13,6 +15,10 @@ class NavBar extends Component {
 		this.state = {
 
 		};
+	}
+
+	logoutSuccess() {
+		this.props.handleToLogout();
 	}
 
 	render() {
@@ -31,6 +37,21 @@ class NavBar extends Component {
 								<Typography variant="title" color="inherit">
 									Keep4u
                 				</Typography>
+							</Grid>
+							<Grid item>
+								<GoogleLogout
+									buttonText="Logout"
+									onLogoutSuccess={this.logoutSuccess.bind(this)}
+									render={(props) => <Button
+										onClick={() => {props.onClick(); this.logoutSuccess();}}
+										variant='contained'
+										color='primary'
+										style={{ margin: 'auto' }}
+									>
+										Sign out
+										</Button>}
+								>
+								</GoogleLogout>
 							</Grid>
 							{/* <Grid item>
 								<InputBase
