@@ -1,4 +1,4 @@
-const API_URL = 'http://188.246.233.13:8080/'
+const API_URL = 'http://keep4u.space:8080/' // 188.246.233.13
 
 const responseHandler = (response) => {
 	if (response.status < 300) {
