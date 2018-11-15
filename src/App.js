@@ -55,7 +55,7 @@ class App extends Component {
 	handleToSelectBoard = async (id) => {
 		this.setState({ selectedBoardId: id }); // setState is asynchronous
 		try {
-			const noteList = await getNotesByBoardId(id);
+			const noteList = await getNotesByBoardId(id, this.state.user_id);
 			this.setState({ noteList: noteList, isNoteSelected: false, isAddingNote: false });
 		} catch (e) {
 			alert(e);
@@ -75,7 +75,7 @@ class App extends Component {
 	handleToDeleteNote = (idx) => {
 		try {
 			let id = this.state.noteList[idx].id;
-			deleteNote(id);
+			deleteNote(id,this.state.user_id);
 			let updatedNoteList = this.state.noteList;
 			updatedNoteList.splice(idx, 1);
 			this.setState({ noteList: updatedNoteList });
@@ -87,7 +87,7 @@ class App extends Component {
 	handleToDeleteBoard = (idx) => {
 		try {
 			let id = this.state.boardList[idx].id;
-			deleteBoard(id);
+			deleteBoard(id, this.state.user_id);
 			let updatedBoardList = this.state.boardList;
 			updatedBoardList.splice(idx, 1);
 			this.setState({ boardList: updatedBoardList });
@@ -124,7 +124,7 @@ class App extends Component {
 	handleToEditBoard = async (board, idx) => {
 		try {
 			let updatedBoard = board;
-			let addedBoard = await putBoard(updatedBoard, updatedBoard.id);
+			let addedBoard = await putBoard(updatedBoard, updatedBoard.id, this.state.user_id);
 			let updatedBoardList = this.state.boardList;
 			updatedBoardList[idx] = addedBoard;
 			this.setState({ boardList: updatedBoardList });
@@ -136,7 +136,7 @@ class App extends Component {
 	handleSaveNote = async (note) => {
 		if (this.state.isAddingNote) {
 			try {
-				const newNote = await postNewNote(note, this.state.selectedBoardId);
+				const newNote = await postNewNote(note, this.state.selectedBoardId, this.state.user_id);
 				let noteList = this.state.noteList;
 				noteList.push(newNote);
 				this.setState({ noteList: noteList, isNoteSelected: false, isAddingNote: false });
@@ -147,7 +147,7 @@ class App extends Component {
 		else if (!this.state.isAddingNote) {
 			try {
 				let id = this.state.noteList[this.state.selectedNoteId].id;
-				const newNote = await putNote(note, id);
+				const newNote = await putNote(note, id, this.state.user_id);
 				let noteList = this.state.noteList;
 				noteList[noteList.findIndex(f => f.id === newNote.id)] = newNote;
 				this.setState({ noteList: noteList, isNoteSelected: false, isAddingNote: false });
@@ -207,11 +207,11 @@ class App extends Component {
 					this.setState({
 						selectedBoardId: boardList[0].id
 					});
-					const noteList = await getNotesByBoardId(this.state.selectedBoardId);
+					const noteList = await getNotesByBoardId(this.state.selectedBoardId, this.state.user_id);
 					this.setState({ ...this.state, boardList, noteList });
 				}
 			} catch (e) {
-				alert(e);
+				console.log(e)
 			}
 		}
 	}
